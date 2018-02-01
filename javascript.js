@@ -1,3 +1,5 @@
+var noSleep = new NoSleep();
+
 var btcNow = null;
 var btcMin = null;
 var btcMax = null;
@@ -87,7 +89,14 @@ function updateEthereumPrices() {
   });
 }
 
+function enableNoSleep() {
+  noSleep.enable();
+//  document.removeEventListener('click', enableNoSleep, false);
+}
+
 $(document).ready(function () {
+  document.addEventListener('click', enableNoSleep, false);
+
   btcNow = $("#btc-main");
   btcMin = $("#btc-min");
   btcMax = $("#btc-max");
