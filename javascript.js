@@ -82,7 +82,7 @@ function updateEthereumPrices() {
       value: Math.min(ethMinPrice, ethNowPrice)
     });
     ethMax.sevenSeg({
-      value: Math.max(ethMaxPrice, ethMaxPrice)
+      value: Math.max(ethMaxPrice, ethNowPrice)
     });
   });
 }
