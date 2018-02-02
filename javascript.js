@@ -30,6 +30,7 @@ function initializeBitcoinPrices() {
     btcNowPrice = parseInt(response[0].price_usd);
     btcMinPrice = btcNowPrice;
     btcMaxPrice = btcNowPrice;
+    
     btcNow.sevenSeg({
       value: btcNowPrice
     });
@@ -45,14 +46,17 @@ function initializeBitcoinPrices() {
 function updateBitcoinPrices() {
   $.get('https://api.coinmarketcap.com/v1/ticker/bitcoin/', function(response) {
     btcNowPrice = parseInt(response[0].price_usd);
+    btcMinPrice = Math.min(btcMinPrice, btcNowPrice);
+    btcMaxPrice = Math.max(btcMaxPrice, btcNowPrice);
+
     btcNow.sevenSeg({
       value: btcNowPrice
     });
     btcMin.sevenSeg({
-      value: Math.min(btcMinPrice, btcNowPrice)
+      value: btcMinPrice
     });
     btcMax.sevenSeg({
-      value: Math.max(btcMaxPrice, btcNowPrice)
+      value: btcMaxPrice
     });
   });
 }
@@ -62,6 +66,7 @@ function initializeEthereumPrices() {
     ethNowPrice = parseInt(response[0].price_usd);
     ethMinPrice = ethNowPrice;
     ethMaxPrice = ethNowPrice;
+
     ethNow.sevenSeg({
       value: ethNowPrice
     });
@@ -77,14 +82,17 @@ function initializeEthereumPrices() {
 function updateEthereumPrices() {
   $.get('https://api.coinmarketcap.com/v1/ticker/ethereum/', function(response) {
     ethNowPrice = parseInt(response[0].price_usd);
+    ethMinPrice = Math.min(ethMinPrice, ethNowPrice);
+    ethMaxPrice = Math.max(ethMaxPrice, ethNowPrice);
+
     ethNow.sevenSeg({
       value: ethNowPrice
     });
     ethMin.sevenSeg({
-      value: Math.min(ethMinPrice, ethNowPrice)
+      value: ethMinPrice
     });
     ethMax.sevenSeg({
-      value: Math.max(ethMaxPrice, ethNowPrice)
+      value: ethMaxPrice
     });
   });
 }
