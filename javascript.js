@@ -29,8 +29,6 @@ function setUp(displays) {
 }
 
 function updateDisplay(display, price) {
-  console.log(display);
-  console.log(price);
   display.sevenSeg({
     value: price
   })
@@ -38,7 +36,7 @@ function updateDisplay(display, price) {
 
 function updateBitcoinPrices() {
   $.get('https://blockchain.info/tobtc?currency=USD&value=1', function(response) {
-    btcNowFloat = 1 / parseFloat(response[0].price_usd)
+    btcNowFloat = 1 / parseFloat(response)
     btcNowPrice = parseInt(btcNowFloat);
     btcMinPrice = Math.min(btcMinPrice, btcNowPrice);
     btcMaxPrice = Math.max(btcMaxPrice, btcNowPrice);
@@ -50,8 +48,8 @@ function updateBitcoinPrices() {
 }
 
 function updateEthereumPrices() {
-  $.get('https://api.coinmarketcap.com/v1/ticker/ethereum/', function(response) {
-    ethNowPrice = parseInt(response[0].price_usd);
+  $.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=USD', function(response) {
+    ethNowPrice = parseInt(response["ethereum"]["usd"]);
     ethMinPrice = Math.min(ethMinPrice, ethNowPrice);
     ethMaxPrice = Math.max(ethMaxPrice, ethNowPrice);
 
@@ -80,11 +78,11 @@ $(document).ready(function () {
 
   updateDisplay(btcMinDisp, btcMinPrice);
   updateDisplay(btcMaxDisp, btcMaxPrice);
-  //updateBitcoinPrices();
+  updateBitcoinPrices();
   
   updateDisplay(ethMinDisp, ethMinPrice);
   updateDisplay(ethMaxDisp, ethMaxPrice);
-  //updateEthereumPrices();
+  updateEthereumPrices();
 
   setInterval(function() {
     updateBitcoinPrices();
