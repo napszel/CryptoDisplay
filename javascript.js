@@ -1,81 +1,51 @@
 var noSleep = new NoSleep();
 
-var btcNow = null;
-var btcMin = null;
-var btcMax = null;
+var btcNowDisp = null;
+var btcMinDisp = null;
+var btcMaxDisp = null;
 var btcNowPrice = 0;
-var btcMinPrice = 0;
-var btcMaxPrice = 0;
+var btcMinPrice = 3775;
+var btcMaxPrice = 19382;
 
-var ethNow = null;
-var ethMin = null;
-var ethMax = null;
+var ethNowDisp = null;
+var ethMinDisp = null;
+var ethMaxDisp = null;
 var ethNowPrice = 0;
-var ethMinPrice = 0;
-var ethMaxPrice = 0;
+var ethMinPrice = 108;
+var ethMaxPrice = 1400;
 
-function setDefaultDisplay(obj) {
-  obj.sevenSeg({
-    digits: 5,
-    value: 0, 
-    colorOff: "#7d7d7d",
-    colorBackground: "#828882",
-    colorOn: "Black",
-    decimalPoint: false
-  });
+function setUp(displays) {
+  var obj;
+  for (obj of displays) {
+    obj.sevenSeg({
+      digits: 5,
+      value: 0, 
+      colorOff: "#7d7d7d",
+      colorBackground: "#828882",
+      colorOn: "Black",
+      decimalPoint: false
+    });
+  }
 }
 
-function initializeBitcoinPrices() {
-  $.get('https://api.coinmarketcap.com/v1/ticker/bitcoin/', function(response) {
-    btcNowPrice = parseInt(response[0].price_usd);
-    btcMinPrice = btcNowPrice;
-    btcMaxPrice = btcNowPrice;
-    
-    btcNow.sevenSeg({
-      value: btcNowPrice
-    });
-    btcMin.sevenSeg({
-      value: btcMinPrice
-    });
-    btcMax.sevenSeg({
-      value: btcMaxPrice
-    });
-  });
+function updateDisplay(display, price) {
+  console.log(display);
+  console.log(price);
+  display.sevenSeg({
+    value: price
+  })
 }
 
 function updateBitcoinPrices() {
-  $.get('https://api.coinmarketcap.com/v1/ticker/bitcoin/', function(response) {
-    btcNowPrice = parseInt(response[0].price_usd);
+  $.get('https://blockchain.info/tobtc?currency=USD&value=1', function(response) {
+    btcNowFloat = 1 / parseFloat(response[0].price_usd)
+    btcNowPrice = parseInt(btcNowFloat);
     btcMinPrice = Math.min(btcMinPrice, btcNowPrice);
     btcMaxPrice = Math.max(btcMaxPrice, btcNowPrice);
 
-    btcNow.sevenSeg({
-      value: btcNowPrice
-    });
-    btcMin.sevenSeg({
-      value: btcMinPrice
-    });
-    btcMax.sevenSeg({
-      value: btcMaxPrice
-    });
-  });
-}
-
-function initializeEthereumPrices() {
-  $.get('https://api.coinmarketcap.com/v1/ticker/ethereum/', function(response) {
-    ethNowPrice = parseInt(response[0].price_usd);
-    ethMinPrice = ethNowPrice;
-    ethMaxPrice = ethNowPrice;
-
-    ethNow.sevenSeg({
-      value: ethNowPrice
-    });
-    ethMin.sevenSeg({
-      value: ethMinPrice
-    });
-    ethMax.sevenSeg({
-      value: ethMaxPrice
-    });
+    updateDisplay(btcNowDisp, btcNowPrice);
+    updateDisplay(btcMinDisp, btcMinPrice);
+    updateDisplay(btcMaxDisp, btcMaxPrice);
   });
 }
 
@@ -85,15 +55,9 @@ function updateEthereumPrices() {
     ethMinPrice = Math.min(ethMinPrice, ethNowPrice);
     ethMaxPrice = Math.max(ethMaxPrice, ethNowPrice);
 
-    ethNow.sevenSeg({
-      value: ethNowPrice
-    });
-    ethMin.sevenSeg({
-      value: ethMinPrice
-    });
-    ethMax.sevenSeg({
-      value: ethMaxPrice
-    });
+    updateDisplay(ethNowDisp, ethNowPrice);
+    updateDisplay(ethMinDisp, ethMinPrice);
+    updateDisplay(ethMaxDisp, ethMaxPrice);
   });
 }
 
@@ -105,29 +69,26 @@ function enableNoSleep() {
 $(document).ready(function () {
   document.addEventListener('click', enableNoSleep, false);
 
-  btcNow = $("#btc-main");
-  btcMin = $("#btc-min");
-  btcMax = $("#btc-max");
+  btcNowDisp = $("#btc-main");
+  btcMinDisp = $("#btc-min");
+  btcMaxDisp = $("#btc-max");
+  ethNowDisp = $("#eth-main");
+  ethMinDisp = $("#eth-min");
+  ethMaxDisp = $("#eth-max");
 
-  setDefaultDisplay(btcNow);
-  setDefaultDisplay(btcMin);
-  setDefaultDisplay(btcMax);
+  setUp([btcNowDisp, btcMinDisp, btcMaxDisp, ethNowDisp, ethMinDisp, ethMaxDisp]);
 
-  initializeBitcoinPrices();
-
-  ethNow = $("#eth-main");
-  ethMin = $("#eth-min");
-  ethMax = $("#eth-max");
+  updateDisplay(btcMinDisp, btcMinPrice);
+  updateDisplay(btcMaxDisp, btcMaxPrice);
+  //updateBitcoinPrices();
   
-  setDefaultDisplay(ethNow);
-  setDefaultDisplay(ethMin);
-  setDefaultDisplay(ethMax);
-
-  initializeEthereumPrices();
+  updateDisplay(ethMinDisp, ethMinPrice);
+  updateDisplay(ethMaxDisp, ethMaxPrice);
+  //updateEthereumPrices();
 
   setInterval(function() {
     updateBitcoinPrices();
     updateEthereumPrices();
-  }, 300000); // update prices every 5 minutes
+  }, 300000); // 300 000 ms = update prices every 5 minutes
 
 });
