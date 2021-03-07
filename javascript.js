@@ -5,14 +5,14 @@ var btcMinDisp = null;
 var btcMaxDisp = null;
 var btcNowPrice = 0;
 var btcMinPrice = 3775;
-var btcMaxPrice = 19382;
+var btcMaxPrice = 58330;
 
 var ethNowDisp = null;
 var ethMinDisp = null;
 var ethMaxDisp = null;
 var ethNowPrice = 0;
 var ethMinPrice = 108;
-var ethMaxPrice = 1400;
+var ethMaxPrice = 2036;
 
 function setUp(displays) {
   var obj;
